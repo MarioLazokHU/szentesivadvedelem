@@ -1,10 +1,10 @@
 export const navItems = [
-	{ href: '/', label: 'Kezdőlap' },
-	{ href: '/rolunk', label: 'Rólunk' },
+	{ href: '/#kezdolap', label: 'Kezdőlap' },
+	{ href: '/#rolunk', label: 'Rólunk' },
 	{ href: '/galeria', label: 'Galéria' },
 	{ href: '/videok', label: 'Videók' },
-	{ href: '/tamogatas', label: 'Támogatás' },
-	{ href: '/kapcsolat', label: 'Kapcsolat' }
+	{ href: '/#tamogatas', label: 'Támogatás' },
+	{ href: '/#kapcsolat', label: 'Kapcsolat' }
 ];
 
 export const socialLinks = [

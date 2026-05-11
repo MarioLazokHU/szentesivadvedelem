@@ -6,18 +6,18 @@
 	<title>{foundation.shortName} | Támogatás</title>
 </svelte:head>
 
-<section class="relative overflow-hidden px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-	<img src="/tamogatasbackground.jpg" alt="Támogatás háttér" class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 mx-auto w-full max-w-6xl opacity-10" />
+<section class="relative w-full overflow-hidden px-4 py-14 sm:px-8 lg:px-12 lg:py-20 2xl:px-16">
+	<img src="/tamogatasbackground.jpg" alt="Támogatás háttér" class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 w-full opacity-10" />
 
-	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+	<div class="grid w-full gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
 		<div class="space-y-6">
-			<p class="font-black uppercase tracking-[0.3em] text-stone-600">Segítség az állatoknak</p>
+			<p class="font-black uppercase tracking-[0.3em] text-green-700">Segítség az állatoknak</p>
 			<h1 class="section-title text-stone-900">Támogatás</h1>
-			<p class="lead-text max-w-3xl text-stone-700">Kérjük Önöket és kérünk titeket, segítsétek munkánk adótok 1 %, hiszen egyre több állatka érkezik, akiknek mi vagyunk az utolsó remény, remény az életre.</p>
+			<p class="lead-text text-stone-700">Kérjük Önöket és kérünk titeket, segítsétek munkánk adótok 1 %, hiszen egyre több állatka érkezik, akiknek mi vagyunk az utolsó remény, remény az életre.</p>
 		</div>
 
-		<div class="glass-card rounded-4xl p-6 sm:p-8">
-			<p class="text-sm font-black uppercase tracking-[0.25em] text-red-800">Adó 1% felajánlás</p>
+		<div class="glass-card rounded-2xl border-l-4 border-[#69a61e] p-6 sm:p-8">
+			<p class="text-sm font-black uppercase tracking-[0.25em] text-green-700">Adó 1% felajánlás</p>
 			<p class="mt-3 text-4xl font-black text-stone-900">{foundation.tax}</p>
 			<div class="mt-6 border-t border-stone-200 pt-6">
 				<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Számlaszám</p>
@@ -27,8 +27,8 @@
 		</div>
 	</div>
 
-	<div class="mx-auto mt-10 max-w-7xl">
-		<div class="glass-card rounded-4xl p-6 sm:p-10 lg:p-12">
+	<div class="mt-10 w-full">
+		<div class="glass-card rounded-2xl p-6 sm:p-10 lg:p-12">
 			<div class="space-y-6 text-justify leading-8 text-stone-700">
 				<p class="text-xl font-black uppercase leading-9 text-stone-900">NE FELEDD , MINÉL TÖBB 1% FELAJÁNLÁS ÉRKEZIK, ANNÁL TÖBB ELESETT ÉS SÉRÜLT ÁLLATON SEGÍTHETÜNK, EGYÜTT KÖZÖS ÖSSZEFOGÁSSAL. ADÓ 1 % FELAJÁNLÁS : 19287283-1-06</p>
 				<p>Adó 1 százalék felajánlása Természet és Állatvédelemre! Nonprofit szervezetként működünk, Állami támogatás nélkül, a működésünk kizárólag Önöknek és Nektek köszönhetjük. Csongrád Csanád vármegye és Békés vármegye területén végezzük a mentési munkánk.</p>
