@@ -1,0 +1,22 @@
+module default {
+    type Image {
+        description: str;
+        createdAt: datetime;
+        updatedAt: datetime;
+    }
+
+    type Video {
+        url: str;
+        description: str;
+        createdAt: datetime;
+        updatedAt: datetime;
+    }
+
+    type BlogPost {
+        title: str;
+        subtitle: str;
+        content: str;
+        createdAt: datetime;
+        updatedAt: datetime;
+    }
+}
