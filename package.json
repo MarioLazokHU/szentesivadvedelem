@@ -20,9 +20,14 @@
     "@types/node": "^25.6.2",
     "svelte": "^5.55.5",
     "tailwindcss": "^4.3.0",
-    "vite": "^8.0.11"
+    "vite": "^8.0.11",
+    "@types/bun": "latest"
   },
   "dependencies": {
     "gel": "^2.2.0"
+  },
+  "private": true,
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }

@@ -40,6 +40,17 @@
 		errorMessage = '';
 	}
 
+	const imagePreviewFallback =
+		'data:image/svg+xml;charset=UTF-8,' +
+		encodeURIComponent(
+			'<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><rect width="100%" height="100%" fill="#111827"/><text x="50%" y="50%" fill="#9ca3af" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">Nincs előnézet</text></svg>'
+		);
+
+	function handleImageError(event: Event) {
+		const img = event.currentTarget as HTMLImageElement;
+		img.src = imagePreviewFallback;
+	}
+
 	function updateSelectedFile(event: Event) {
 		const input = event.currentTarget as HTMLInputElement;
 		selectedFileName = input.files?.[0]?.name ?? 'Nincs fájl kiválasztva';
@@ -56,6 +67,11 @@
 
 			if (!(file instanceof File) || file.size === 0) {
 				throw new Error('Válassz ki egy képet a feltöltéshez.');
+			}
+
+			const maxSize = 4 * 1024 * 1024;
+			if (file.size > maxSize) {
+				throw new Error('A kép mérete nem haladhatja meg a 4 MB-ot.');
 			}
 
 			const response = await fetch('/admin/api/images', {
@@ -161,6 +177,7 @@
 				<span class="grid min-w-0 max-w-full gap-2 rounded-lg border border-zinc-700 bg-zinc-950 p-3">
 					<span class="w-fit rounded-md bg-[#69a61e] px-4 py-2 text-sm font-bold text-white">Fájl kiválasztása</span>
 					<span class="block max-w-full truncate text-sm font-semibold text-zinc-400">{selectedFileName}</span>
+					<span class="text-xs text-zinc-500">Max. 4 MB</span>
 					<input name="file" type="file" accept="image/*" class="sr-only" required onchange={updateSelectedFile} />
 				</span>
 			</label>
@@ -174,6 +191,10 @@
 				{uploadPending ? 'Feltöltés...' : 'Feltöltés'}
 			</button>
 		</form>
+
+		<div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-xl shadow-black/20">
+			<p class="text-sm font-black uppercase tracking-[0.2em] text-zinc-400">Már feltöltött képek</p>
+		</div>
 
 		{#if images.length === 0}
 			<div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-10 text-center shadow-xl shadow-black/20">
@@ -193,15 +214,13 @@
 					{#each images as image (image.id)}
 						<article class="grid min-w-0 gap-4 p-4 sm:p-6 lg:grid-cols-[120px_1fr_1.4fr_220px] lg:items-center">
 							<a href={`/api/images/${image.id}`} target="_blank" rel="noreferrer" class="block min-w-0 overflow-hidden rounded-lg bg-zinc-800 ring-1 ring-zinc-700">
-								<img src={`/api/images/${image.id}`} alt={image.description || 'Admin képelőnézet'} class="h-28 w-full object-cover lg:h-24" loading="lazy" />
-							</a>
+									<img src={`/api/images/${image.id}`} alt={image.description || 'Admin képelőnézet'} class="h-28 w-full object-cover lg:h-24" loading="lazy" onerror={handleImageError} />
+								</a>
 
-							<div class="min-w-0 space-y-2">
-								<p class="truncate text-xs font-black uppercase tracking-[0.18em] text-zinc-500">{image.id}</p>
-								<p class="text-sm font-semibold text-zinc-300">Létrehozva: {formatDate(image.createdAt)}</p>
-								<p class="text-sm font-semibold text-zinc-500">Frissítve: {formatDate(image.updatedAt)}</p>
+								<div class="min-w-0 space-y-2">
+									<p class="text-sm font-semibold text-zinc-300">Létrehozva: {formatDate(image.createdAt)}</p>
+									<p class="text-sm font-semibold text-zinc-500">Frissítve: {formatDate(image.updatedAt)}</p>
 							</div>
-
 							<label class="grid min-w-0 max-w-full gap-2 overflow-hidden">
 								<span class="text-xs font-black uppercase tracking-[0.2em] text-zinc-400 lg:hidden">Description</span>
 								<textarea bind:value={image.description} rows="3" class="block w-full min-w-0 max-w-full resize-none rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm font-semibold leading-6 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-green-500" placeholder="Kép leírása"></textarea>

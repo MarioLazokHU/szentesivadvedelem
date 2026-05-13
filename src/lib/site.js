@@ -2,6 +2,7 @@ export const navItems = [
 	{ href: '/#kezdolap', label: 'Kezdőlap' },
 	{ href: '/#rolunk', label: 'Rólunk' },
 	{ href: '/galeria', label: 'Galéria' },
+	{ href: '/blog', label: 'Blog' },
 	{ href: '/videok', label: 'Videók' },
 	{ href: '/#tamogatas', label: 'Támogatás' },
 	{ href: '/#kapcsolat', label: 'Kapcsolat' }

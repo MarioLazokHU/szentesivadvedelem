@@ -1,5 +1,19 @@
-<script>
+<script lang="ts">
 	import { aboutSections, foundation, socialLinks } from '$lib/site.js';
+
+	type AdminImage = {
+		id: string;
+		description?: string | null;
+		createdAt?: Date | string | null;
+		updatedAt?: Date | string | null;
+	};
+
+	let { data } = $props<{ data: { images: AdminImage[] } }>();
+	let images = $state<AdminImage[]>([]);
+
+	$effect(() => {
+		images = data.images ?? [];
+	});
 
 	const openingHours = ['Hétfő 10:00–17:00', 'Kedd 10:00–17:00', 'Szerda 10:00–17:00', 'Csütörtök 10:00–17:00', 'Péntek 10:00–17:00', 'Szombat 10:00–12:00', 'Vasárnap 10:00–12:00'];
 </script>
