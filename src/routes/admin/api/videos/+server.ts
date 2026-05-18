@@ -15,11 +15,10 @@ export const GET = async () => {
   });
 };
 
-function isYouTubeUrl(url: string) {
+function isValidUrl(url: string) {
   try {
-    const parsed = new URL(url.trim());
-    const host = parsed.hostname.toLowerCase();
-    return host === 'www.youtube.com' || host === 'youtube.com' || host === 'youtu.be';
+    new URL(url.trim());
+    return true;
   } catch {
     return false;
   }
@@ -32,12 +31,12 @@ export const POST = async ({ request }) => {
     return new Response('Missing video URL', { status: 400 });
   }
 
-  if (!isYouTubeUrl(url)) {
-    return new Response('Only YouTube links are accepted', { status: 400 });
+  if (!isValidUrl(url)) {
+    return new Response('Invalid video URL', { status: 400 });
   }
 
   try {
-    const video = await e
+    const createdVideo = await e
       .insert(e.Video, {
         url,
         description: description || '',
@@ -46,7 +45,7 @@ export const POST = async ({ request }) => {
       })
       .run(client);
 
-    return new Response(JSON.stringify(video), {
+    return new Response(JSON.stringify(createdVideo), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -63,8 +62,8 @@ export const PATCH = async ({ request }) => {
     return new Response('Missing id or url', { status: 400 });
   }
 
-  if (!isYouTubeUrl(url)) {
-    return new Response('Only YouTube links are accepted', { status: 400 });
+  if (!isValidUrl(url)) {
+    return new Response('Invalid video URL', { status: 400 });
   }
 
   try {

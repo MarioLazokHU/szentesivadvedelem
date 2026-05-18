@@ -74,7 +74,7 @@
 
 <style>
   .earth-gradient {
-    background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+    background: linear-gradient(135deg, #69a61e 0%, #69a61e 100%);
   }
   .glass-card {
     backdrop-filter: blur(16px);

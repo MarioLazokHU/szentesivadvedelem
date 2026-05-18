@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { invalidateAll } from '$app/navigation';
+
   type AdminVideo = {
     id: string;
     url: string;
@@ -62,11 +64,10 @@
     return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
   }
 
-  function isYouTubeUrl(value: string) {
+  function isValidUrl(value: string) {
     try {
-      const url = new URL(value.trim());
-      const host = url.hostname.toLowerCase();
-      return host === 'www.youtube.com' || host === 'youtube.com' || host === 'youtu.be';
+      new URL(value.trim());
+      return true;
     } catch {
       return false;
     }
@@ -82,8 +83,8 @@
         throw new Error('A videó link megadása kötelező.');
       }
 
-      if (!isYouTubeUrl(newUrl)) {
-        throw new Error('Csak YouTube linket fogadunk el.');
+      if (!isValidUrl(newUrl)) {
+        throw new Error('Érvényes videó linket fogadunk el.');
       }
 
       const response = await fetch('/admin/api/videos', {
@@ -96,10 +97,12 @@
         throw new Error(await response.text());
       }
 
+      const newVideo = await response.json();
+      videos = [newVideo, ...videos].sort((a, b) => getTime(b.createdAt) - getTime(a.createdAt));
       newUrl = '';
       newDescription = '';
       successMessage = 'A videó link sikeresen hozzáadva.';
-      window.location.reload();
+      await invalidateAll();
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Nem sikerült hozzáadni a videó linket.';
     } finally {
@@ -112,8 +115,8 @@
     savingId = video.id;
 
     try {
-      if (!isYouTubeUrl(video.url)) {
-        throw new Error('Csak YouTube linket fogadunk el.');
+      if (!isValidUrl(video.url)) {
+        throw new Error('Érvényes videó linket fogadunk el.');
       }
 
       const response = await fetch('/admin/api/videos', {
@@ -129,6 +132,7 @@
       const updatedVideo = await response.json();
       videos = videos.map((item) => (item.id === updatedVideo.id ? updatedVideo : item));
       successMessage = 'A videó link sikeresen frissítve.';
+      await invalidateAll();
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Nem sikerült frissíteni a videó linket.';
     } finally {
@@ -155,11 +159,27 @@
 
       videos = videos.filter((item) => item.id !== video.id);
       successMessage = 'A videó link törölve.';
+      await invalidateAll();
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Nem sikerült törölni a videó linket.';
     } finally {
       deletingId = null;
     }
+  }
+
+  let activeVideoUrl = $state<string | null>(null);
+
+  function openPreview(url: string) {
+    const id = getYouTubeVideoId(url);
+    if (id) {
+      activeVideoUrl = `https://youtube-nocookie.com{id}?autoplay=1`;
+    } else {
+      alert('Ez a link nem egy érvényes YouTube videó, így nem lehet helyben lejátszani.');
+    }
+  }
+
+  function closePreview() {
+    activeVideoUrl = null;
   }
 </script>
 
@@ -173,7 +193,7 @@
       <div>
         <p class="text-sm font-black uppercase tracking-[0.3em] text-green-400">Admin</p>
         <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-6xl">Videó linkek kezelése</h1>
-        <p class="mt-4 max-w-2xl text-zinc-400">Videó URL-eket adhatsz hozzá, szerkeszthetsz és törölhetsz.</p>
+        <p class="mt-4 max-w-2xl text-zinc-400">Videó URL-eket adhatsz hozzá, szerkeszthetsz és törölchesz.</p>
       </div>
       <div class="rounded-xl bg-[#69a61e] px-5 py-4 text-center text-white">
         <p class="text-3xl font-black">{videos.length}</p>
@@ -217,53 +237,44 @@
         <p class="mt-2 text-zinc-400">Az első videó linket a fenti űrlappal adhatod hozzá.</p>
       </div>
     {:else}
-      <div class="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-xl shadow-black/20">
-        <div class="hidden grid-cols-[1.2fr_1fr_220px] gap-4 border-b border-zinc-800 bg-zinc-950 px-6 py-4 text-xs font-black uppercase tracking-[0.2em] text-zinc-400 lg:grid">
-          <span>Videó</span>
-          <span>Meta</span>
-          <span>Műveletek</span>
-        </div>
-
-        <div class="divide-y divide-zinc-800">
-          {#each videos as video (video.id)}
-            <article class="grid min-w-0 gap-4 p-4 sm:p-6 lg:grid-cols-[1.2fr_1fr_220px] lg:items-center">
-              <div class="grid gap-4">
-                <div class="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950">
-                  {#if getYouTubeThumbnail(video.url)}
-                    <img src={getYouTubeThumbnail(video.url)} alt="Videó előnézet" class="h-52 w-full object-cover sm:h-40" />
-                  {:else}
-                    <div class="flex h-52 items-center justify-center text-zinc-500 sm:h-40">Előnézet nem elérhető</div>
-                  {/if}
-                </div>
-
-                <label class="grid gap-2">
-                  <span class="text-xs font-black uppercase tracking-[0.2em] text-zinc-400 lg:hidden">URL</span>
-                  <input bind:value={video.url} type="url" class="block w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 font-semibold text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-green-500" />
-                </label>
-
-                <label class="grid gap-2">
-                  <span class="text-xs font-black uppercase tracking-[0.2em] text-zinc-400 lg:hidden">Leírás</span>
-                  <input bind:value={video.description} type="text" class="block w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 font-semibold text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-green-500" />
-                </label>
+      <div class="divide-y divide-zinc-800 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-xl shadow-black/20">
+        {#each videos as video (video.id)}
+          <article class="grid min-w-0 gap-4 p-4 sm:p-6 lg:grid-cols-[1.2fr_1fr_180px] lg:items-center">
+            <div class="grid gap-4">
+              <div class="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950">
+                {#if getYouTubeThumbnail(video.url)}
+                  <img src={getYouTubeThumbnail(video.url)} alt="Videó előnézet" class="h-52 w-full object-cover sm:h-40" />
+                {:else}
+                  <div class="flex h-52 items-center justify-center text-zinc-500 sm:h-40">Előnézet nem elérhető</div>
+                {/if}
               </div>
 
-              <div class="min-w-0 space-y-2">
-                <p class="text-sm font-semibold text-zinc-300">Létrehozva: {formatDate(video.createdAt)}</p>
-                <p class="text-sm font-semibold text-zinc-500">Frissítve: {formatDate(video.updatedAt)}</p>
-              </div>
+              <label class="grid gap-2">
+                <span class="text-xs font-black uppercase tracking-[0.2em] text-zinc-400 lg:hidden">URL</span>
+                <input bind:value={video.url} type="url" class="block w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 font-semibold text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-green-500" />
+              </label>
 
-              <div class="grid min-w-0 gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                <a href={video.url} target="_blank" rel="noreferrer" class="rounded-lg bg-zinc-800 px-4 py-3 text-center font-black text-zinc-100 transition hover:bg-zinc-700">Megnyitás</a>
-                <button type="button" class="rounded-lg bg-[#69a61e] px-4 py-3 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#558819] disabled:cursor-not-allowed disabled:opacity-60" disabled={savingId === video.id || deletingId === video.id} onclick={() => updateVideo(video)}>
-                  {savingId === video.id ? 'Mentés...' : 'Mentés'}
-                </button>
-                <button type="button" class="rounded-lg bg-red-950 px-4 py-3 font-black text-red-200 ring-1 ring-red-800 transition hover:-translate-y-0.5 hover:bg-red-900 disabled:cursor-not-allowed disabled:opacity-60" disabled={savingId === video.id || deletingId === video.id} onclick={() => deleteVideo(video)}>
-                  {deletingId === video.id ? 'Törlés...' : 'Törlés'}
-                </button>
-              </div>
-            </article>
-          {/each}
-        </div>
+              <label class="grid gap-2">
+                <span class="text-xs font-black uppercase tracking-[0.2em] text-zinc-400 lg:hidden">Leírás</span>
+                <input bind:value={video.description} type="text" class="block w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 font-semibold text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-green-500" />
+              </label>
+            </div>
+
+            <div class="min-w-0 space-y-2">
+              <p class="text-sm font-semibold text-zinc-300">Létrehozva: {formatDate(video.createdAt)}</p>
+              <p class="text-sm font-semibold text-zinc-500">Frissítve: {formatDate(video.updatedAt)}</p>
+            </div>
+
+            <div class="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              <button type="button" class="rounded-lg bg-[#69a61e] px-4 py-3 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#558819] disabled:cursor-not-allowed disabled:opacity-60" disabled={savingId === video.id || deletingId === video.id} onclick={() => updateVideo(video)}>
+                {savingId === video.id ? 'Mentés...' : 'Mentés'}
+              </button>
+              <button type="button" class="rounded-lg bg-red-950 px-4 py-3 font-black text-red-200 ring-1 ring-red-800 transition hover:-translate-y-0.5 hover:bg-red-900 disabled:cursor-not-allowed disabled:opacity-60" disabled={savingId === video.id || deletingId === video.id} onclick={() => deleteVideo(video)}>
+                {deletingId === video.id ? 'Törlés...' : 'Törlés'}
+              </button>
+            </div>
+          </article>
+        {/each}
       </div>
     {/if}
   </section>
