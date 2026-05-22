@@ -1,17 +1,21 @@
 
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
-const IMAGE_DIR = path.join(process.cwd(), 'static', 'images');
+const IMAGE_DIR = path.join(process.cwd(), 'public', 'images');
+
+
+
+
 
 export const GET = async ({ params }) => {
-  const filePath = path.join(IMAGE_DIR, params.id);
+  const { id } = params;
 
   try {
-    const data = await readFile(filePath);
+    const data = await readFile(path.join(IMAGE_DIR, id));
     return new Response(data, {
       headers: {
-        "Content-Type": "image/jpeg"
+        "Content-Type": "image/*"
       }
     });
   } catch (error) {

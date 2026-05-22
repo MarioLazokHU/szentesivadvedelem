@@ -1,9 +1,19 @@
 import e from '../../../../lib/server/e';
 import { client } from "../../../../lib/server/e";
-import { mkdir, writeFile, unlink } from "node:fs/promises";
+import { mkdir, writeFile, unlink, readdir } from "node:fs/promises";
 import path from "node:path";
 
-const IMAGE_DIR = path.join(process.cwd(), 'static', 'images');
+const IMAGE_DIR = path.join(process.cwd(), 'public', 'images');
+const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.svg', '.bmp'];
+
+async function findImageFileName(id: string) {
+  try {
+    const files = await readdir(IMAGE_DIR);
+    return files.find((file) => path.parse(file).name === id) ?? null;
+  } catch {
+    return null;
+  }
+}
 
 export const POST = async ({ request }) => {
   const formData = await request.formData();
@@ -30,7 +40,10 @@ export const POST = async ({ request }) => {
       })
       .run(client);
 
-    const filePath = path.join(IMAGE_DIR, id);
+    
+    
+    const fileName = id;
+    const filePath = path.join(IMAGE_DIR, fileName);
     await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
 
     return new Response("File uploaded and database updated", { status: 200 });
@@ -52,7 +65,10 @@ export const DELETE = async ({ request }) => {
       }))
       .run(client);
 
-    await unlink(path.join(IMAGE_DIR, id));
+    const fileName = await findImageFileName(id);
+    if (fileName) {
+      await unlink(path.join(IMAGE_DIR, fileName));
+    }
     return new Response("Image deleted", { status: 200 });
   } catch (error) {
     console.error("Error deleting image:", error);

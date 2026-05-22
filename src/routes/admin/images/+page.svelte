@@ -1,6 +1,7 @@
 <script lang="ts">
 	type AdminImage = {
 		id: string;
+		fileName?: string | null;
 		description?: string | null;
 		createdAt?: Date | string | null;
 		updatedAt?: Date | string | null;
@@ -213,8 +214,8 @@
 				<div class="divide-y divide-zinc-800">
 					{#each images as image (image.id)}
 						<article class="grid min-w-0 gap-4 p-4 sm:p-6 lg:grid-cols-[120px_1fr_1.4fr_220px] lg:items-center">
-							<a href={`/api/images/${image.id}`} target="_blank" rel="noreferrer" class="block min-w-0 overflow-hidden rounded-lg bg-zinc-800 ring-1 ring-zinc-700">
-									<img src={`/api/images/${image.id}`} alt={image.description || 'Admin képelőnézet'} class="h-28 w-full object-cover lg:h-24" loading="lazy" onerror={handleImageError} />
+<a href={image.fileName ? `/images/${image.fileName}` : `/api/images/${image.id}`} target="_blank" rel="noreferrer" class="block min-w-0 overflow-hidden rounded-lg bg-zinc-800 ring-1 ring-zinc-700">
+					<img src={`/api/images/${image.id}`} alt={image.description || 'Admin képelőnézet'} class="h-28 w-full object-cover lg:h-24" loading="lazy" onerror={handleImageError} />
 								</a>
 
 								<div class="min-w-0 space-y-2">
@@ -227,7 +228,7 @@
 							</label>
 
 							<div class="grid min-w-0 gap-3 sm:grid-cols-3 lg:grid-cols-1">
-								<a href={`/api/images/${image.id}`} target="_blank" rel="noreferrer" class="rounded-lg bg-zinc-800 px-4 py-3 text-center font-black text-zinc-100 transition hover:bg-zinc-700">Megnyitás</a>
+								<a href={image.fileName ? `/images/${image.fileName}` : `/api/images/${image.id}`} target="_blank" rel="noreferrer" class="rounded-lg bg-zinc-800 px-4 py-3 text-center font-black text-zinc-100 transition hover:bg-zinc-700">Megnyitás</a>
 								<button type="button" class="rounded-lg bg-[#69a61e] px-4 py-3 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#558819] disabled:cursor-not-allowed disabled:opacity-60" disabled={savingId === image.id || deletingId === image.id} onclick={() => updateDescription(image)}>
 									{savingId === image.id ? 'Mentés...' : 'Mentés'}
 								</button>
