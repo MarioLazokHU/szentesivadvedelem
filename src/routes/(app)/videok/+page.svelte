@@ -96,17 +96,17 @@
 		</div>
 
 		<div class="p-8 sm:p-12">
-			{#if data.videos && data.videos.length > 0}
-				<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+				{#if data.videos && data.videos.length > 0}
+					<div class="grid grid-cols-1 gap-8">
 					{#each data.videos as video}
 						{@const videoId = getYouTubeId(video.url)}
 
 						<div
-							class="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+								class="group grid overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl lg:grid-cols-[minmax(320px,38vw)_1fr]"
 						>
 							<div
 								id={"video-card-" + video.id}
-								class="relative aspect-video w-full overflow-hidden bg-zinc-900"
+									class="relative aspect-video w-full overflow-hidden bg-zinc-900 lg:h-full lg:min-h-72"
 							>
 								{#if playingVideoId === video.id}
 									{#if isDirectVideoFile(video.url)}
@@ -238,9 +238,9 @@
 							</div>
 
 							<!-- Leírás -->
-							<div class="p-6">
+								<div class="flex flex-col justify-between gap-6 p-6 lg:p-8">
 								<h3
-									class="line-clamp-2 text-lg font-bold text-zinc-800"
+										class="whitespace-pre-line text-base font-medium leading-8 text-zinc-700 lg:text-lg"
 								>
 									{video.description}
 								</h3>
