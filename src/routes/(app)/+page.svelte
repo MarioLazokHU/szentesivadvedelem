@@ -66,7 +66,7 @@
 <section class="w-full px-4 pb-16 sm:px-8 lg:px-12 2xl:px-16">
 	<div class="glass-card rounded-2xl p-6 sm:p-10 lg:p-12">
 		<h2 class="mb-6 text-3xl font-black tracking-tight text-stone-900">Bemutatkozás</h2>
-		<div class="space-y-5 text-justify leading-8 text-stone-700">
+		<div class="space-y-5  text-lg leading-8 text-stone-700">
 			<p>Az alapítványnak két alapítója van, Szabó Zoltán Ferenc, valamint Gémes László. Működésünket 2021.01.01 nappal kezdtük meg, Nonprofit szervezetként működünk, Állami támogatás nélkül, magánszemélyek támogatásával.</p>
 			<p>Kormányhivatali engedély a Csongrád Csanád Megyei Kormányhivatal által 2021.április. 12 nappal került engedélyezésre. 2021.április.04. nappal a Szegedi Vadaspark Nonprofit Kft együttműködési megállapodást kötöttünk. Saját ellátó állatorvossal rendelkezünk.</p>
 			<p>Az alapítvány célja: A természet - , és a Magyarországon honos itt szaporodó, valamint az e területen átvonuló, a természetben vadon élő állatok védelme, a sérült állatok gondozása, ellátása, gyógyítása, terápiás kezelése, felépülésük után a szabad termszetbe való visszahelyezése, az erre alkalmatlan egyedek zárttéri tenyésztése, s az utódainak a szabad természetbe a visszabocsátása, mindezzel e fajoknak a természetben való fennmaradását, valamint a természet ökológiai egyensúlyának megóvását szolgálva.</p>
@@ -92,7 +92,7 @@
 				<div class="w-full space-y-4 lg:w-3/5">
 					<span class="inline-flex rounded-lg bg-[#69a61e] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white">{String(index + 1).padStart(2, '0')}</span>
 					<h3 class="text-3xl font-black tracking-tight text-stone-900 sm:text-4xl">{section.title}</h3>
-					<p class="text-justify leading-8 text-stone-700">{section.text}</p>
+					<p class="leading-8 text-lg text-stone-700">{section.text}</p>
 				</div>
 			</article>
 		{/each}
@@ -125,7 +125,7 @@
 	</div>
 	<div class="mt-10 w-full">
 		<div class="glass-card rounded-2xl p-6 sm:p-10 lg:p-12">
-			<div class="space-y-6 text-justify leading-8 text-stone-700">
+			<div class="space-y-6  leading-8 text-stone-700">
 				<p class="text-xl font-black uppercase leading-9 text-stone-900">NE FELEDD , MINÉL TÖBB 1% FELAJÁNLÁS ÉRKEZIK, ANNÁL TÖBB ELESETT ÉS SÉRÜLT ÁLLATON SEGÍTHETÜNK, EGYÜTT KÖZÖS ÖSSZEFOGÁSSAL. ADÓ 1 % FELAJÁNLÁS : 19287283-1-06</p>
 				<p>Adó 1 százalék felajánlása Természet és Állatvédelemre! Nonprofit szervezetként működünk, Állami támogatás nélkül, a működésünk kizárólag Önöknek és Nektek köszönhetjük. Csongrád Csanád vármegye és Békés vármegye területén végezzük a mentési munkánk.</p>
 				<p>Segítse ön is a működésünk, az állatok védelmét, gyógyítását, műtéti költségeiket, a cicák és kutyusok ivartalanítását, az elesett árva cicák és kutyusok felnevelését, a gyermekek oktatását, adóbevalláskor az adó 1% felajánlással.</p>
@@ -146,7 +146,7 @@
 			<div class="space-y-6">
 				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Cím</p><p class="mt-2 text-xl font-black text-stone-900">{foundation.address}</p></div>
 				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Mobil</p><a href="tel:+36306332900" class="mt-2 block text-xl font-black text-[#68a61c]">{foundation.phone}</a></div>
-				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">E-mail</p><a href={`mailto:${foundation.email}`} class="mt-2 block text-xl font-black text-stone-900">{foundation.email}</a></div>
+				<!--<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">E-mail</p><a href={`mailto:${foundation.email}`} class="mt-2 block text-xl font-black text-stone-900">{foundation.email}</a></div>-->
 				<div>
 					<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Nyitvatartás</p>
 					<div class="mt-3 grid gap-2">{#each openingHours as row}<p class="rounded-lg bg-zinc-100 px-4 py-3 font-semibold text-stone-700">{row}</p>{/each}</div>

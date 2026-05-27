@@ -24,7 +24,7 @@
 				<div class="w-full space-y-4 lg:w-3/5">
 					<span class="inline-flex rounded-lg bg-[#69a61e] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white">{String(index + 1).padStart(2, '0')}</span>
 					<h2 class="text-3xl font-black tracking-tight text-stone-900 sm:text-4xl">{section.title}</h2>
-					<p class="text-justify leading-8 text-stone-700">{section.text}</p>
+					<p class=" leading-8 text-stone-700">{section.text}</p>
 				</div>
 			</article>
 		{/each}

@@ -29,7 +29,7 @@
 
 	<div class="mt-10 w-full">
 		<div class="glass-card rounded-2xl p-6 sm:p-10 lg:p-12">
-			<div class="space-y-6 text-justify leading-8 text-stone-700">
+			<div class="space-y-6  leading-8 text-stone-700">
 				<p class="text-xl font-black uppercase leading-9 text-stone-900">NE FELEDD , MINÉL TÖBB 1% FELAJÁNLÁS ÉRKEZIK, ANNÁL TÖBB ELESETT ÉS SÉRÜLT ÁLLATON SEGÍTHETÜNK, EGYÜTT KÖZÖS ÖSSZEFOGÁSSAL. ADÓ 1 % FELAJÁNLÁS : 19287283-1-06</p>
 				<p>Adó 1 százalék felajánlása Természet és Állatvédelemre! Nonprofit szervezetként működünk, Állami támogatás nélkül, a működésünk kizárólag Önöknek és Nektek köszönhetjük. Csongrád Csanád vármegye és Békés vármegye területén végezzük a mentési munkánk.</p>
 				<p>Segítse ön is a működésünk, az állatok védelmét, gyógyítását, műtéti költségeiket, a cicák és kutyusok ivartalanítását, az elesett árva cicák és kutyusok felnevelését, a gyermekek oktatását, adóbevalláskor az adó 1% felajánlással.</p>
