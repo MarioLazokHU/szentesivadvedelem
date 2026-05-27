@@ -7,7 +7,7 @@
 		<div class="space-y-2 text-sm text-zinc-300">
 			<p class="font-black text-white">{foundation.name}</p>
 			<p>Adószám: {foundation.tax}</p>
-			<p class="font-black uppercase text-green-400">Ügyeleti idő: 0-24, tel.: 30/633-2900</p>
+			<p class="font-black uppercase text-[#68a61c]">Ügyeleti idő: 0-24, tel.: 30/633-2900</p>
 		</div>
 
 		<div class="flex items-center gap-3">

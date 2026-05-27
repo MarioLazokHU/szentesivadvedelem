@@ -18,7 +18,7 @@
 
 <section class="w-full px-4 py-14 sm:px-8 lg:px-12 lg:py-20 2xl:px-16">
 	<div class="mb-10 space-y-5">
-		<p class="font-black uppercase tracking-[0.3em] text-green-700">Elérhetőségek</p>
+		<p class="font-black uppercase tracking-[0.3em] text-[#68a61c]">Elérhetőségek</p>
 		<h1 class="section-title text-stone-900">Kapcsolat</h1>
 		<p class="lead-text text-stone-700">Ha bajba jutott állatot találtál, hívd az ügyeleti számot. 0-24 órás ügyelet!</p>
 	</div>
@@ -32,7 +32,7 @@
 				</div>
 				<div>
 					<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Mobil</p>
-					<a href="tel:+36306332900" class="mt-2 block text-xl font-black text-green-700">{foundation.phone}</a>
+					<a href="tel:+36306332900" class="mt-2 block text-xl font-black text-[#68a61c]">{foundation.phone}</a>
 				</div>
 				<div>
 					<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">E-mail</p>

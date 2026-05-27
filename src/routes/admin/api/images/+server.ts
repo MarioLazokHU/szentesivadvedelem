@@ -2,9 +2,9 @@ import e from '../../../../lib/server/e';
 import { client } from "../../../../lib/server/e";
 import { mkdir, writeFile, unlink, readdir } from "node:fs/promises";
 import path from "node:path";
+import sharp from 'sharp';
 
-const IMAGE_DIR = path.join(process.cwd(), 'public', 'images');
-const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.svg', '.bmp'];
+const IMAGE_DIR = path.join(process.cwd(), "public", "images");
 
 async function findImageFileName(id: string) {
   try {
@@ -20,13 +20,8 @@ export const POST = async ({ request }) => {
   const file = formData.get("file") as File;
   const description = (formData.get("description") as string) || "";
 
-  if (!file) {
+  if (!file || file.size === 0) {
     return new Response("Missing file or description", { status: 400 });
-  }
-
-  const maxSize = 4 * 1024 * 1024;
-  if (file.size > maxSize) {
-    return new Response("A kép mérete nem haladhatja meg a 4 MB-ot.", { status: 400 });
   }
 
   try {
@@ -40,11 +35,14 @@ export const POST = async ({ request }) => {
       })
       .run(client);
 
-    
-    
-    const fileName = id;
+    const inputBuffer = Buffer.from(await file.arrayBuffer());
+    const webpBuffer = await sharp(inputBuffer, { animated: true })
+      .webp({ quality: 82, effort: 4 })
+      .toBuffer();
+
+    const fileName = `${id}.webp`;
     const filePath = path.join(IMAGE_DIR, fileName);
-    await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
+    await writeFile(filePath, webpBuffer);
 
     return new Response("File uploaded and database updated", { status: 200 });
   } catch (error) {

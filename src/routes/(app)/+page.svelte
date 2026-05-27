@@ -114,7 +114,7 @@
 			<p class="mt-4 leading-8 text-stone-700">Adó 1 százalék felajánlása Természet és Állatvédelemre! Nonprofit szervezetként működünk, Állami támogatás nélkül.</p>
 		</div>
 		<div class="glass-card rounded-2xl border-l-4 border-[#69a61e] p-6 sm:p-8">
-			<p class="text-sm font-black uppercase tracking-[0.25em] text-green-700">Adó 1% felajánlás</p>
+			<p class="text-sm font-black uppercase tracking-[0.25em] text-[#68a61c]">Adó 1% felajánlás</p>
 			<p class="mt-3 text-4xl font-black text-stone-900">{foundation.tax}</p>
 			<div class="mt-6 border-t border-stone-200 pt-6">
 				<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Számlaszám</p>
@@ -145,7 +145,7 @@
 		<div class="glass-card rounded-2xl p-6 sm:p-8">
 			<div class="space-y-6">
 				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Cím</p><p class="mt-2 text-xl font-black text-stone-900">{foundation.address}</p></div>
-				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Mobil</p><a href="tel:+36306332900" class="mt-2 block text-xl font-black text-green-700">{foundation.phone}</a></div>
+				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Mobil</p><a href="tel:+36306332900" class="mt-2 block text-xl font-black text-[#68a61c]">{foundation.phone}</a></div>
 				<div><p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">E-mail</p><a href={`mailto:${foundation.email}`} class="mt-2 block text-xl font-black text-stone-900">{foundation.email}</a></div>
 				<div>
 					<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Nyitvatartás</p>

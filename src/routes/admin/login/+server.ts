@@ -1,6 +1,7 @@
 import { json, redirect } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD = env.ADMIN_PASSWORD || 'admin123';
 const SESSION_COOKIE = 'admin_session';
 const ADMIN_SESSION_VALUE = 'admin_authenticated_v1';
 
@@ -14,7 +15,7 @@ export const POST = async ({ request, cookies }) => {
   cookies.set(SESSION_COOKIE, ADMIN_SESSION_VALUE, {
     path: '/',
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24
   });

@@ -47,7 +47,7 @@
 <section class="w-full px-4 py-14 sm:px-8 lg:px-12 lg:py-20 2xl:px-16">
 	<div class="mb-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
 		<div class="space-y-5">
-			<p class="font-black uppercase tracking-[0.3em] text-green-700">
+			<p class="font-black uppercase tracking-[0.3em] text-[#68a61c]">
 				Pillanatok a mentésből
 			</p>
 

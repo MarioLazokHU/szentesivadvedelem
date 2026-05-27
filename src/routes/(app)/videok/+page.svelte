@@ -190,7 +190,7 @@
 										${
 											playingVideoId === video.id
 												? 'h-12 w-12 bg-white/10 text-white opacity-0 group-hover:opacity-100'
-												: 'h-14 w-14 bg-white/70 text-green-700 shadow-xl hover:scale-110'
+												: 'h-14 w-14 bg-white/70 text-[#68a61c] shadow-xl hover:scale-110'
 										}`}
 									>
 										{#if playingVideoId === video.id}

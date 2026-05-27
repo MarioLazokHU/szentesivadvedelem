@@ -11,13 +11,13 @@
 
 	<div class="grid w-full gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
 		<div class="space-y-6">
-			<p class="font-black uppercase tracking-[0.3em] text-green-700">Segítség az állatoknak</p>
+			<p class="font-black uppercase tracking-[0.3em] text-[#68a61c]">Segítség az állatoknak</p>
 			<h1 class="section-title text-stone-900">Támogatás</h1>
 			<p class="lead-text text-stone-700">Kérjük Önöket és kérünk titeket, segítsétek munkánk adótok 1 %, hiszen egyre több állatka érkezik, akiknek mi vagyunk az utolsó remény, remény az életre.</p>
 		</div>
 
 		<div class="glass-card rounded-2xl border-l-4 border-[#69a61e] p-6 sm:p-8">
-			<p class="text-sm font-black uppercase tracking-[0.25em] text-green-700">Adó 1% felajánlás</p>
+			<p class="text-sm font-black uppercase tracking-[0.25em] text-[#68a61c]">Adó 1% felajánlás</p>
 			<p class="mt-3 text-4xl font-black text-stone-900">{foundation.tax}</p>
 			<div class="mt-6 border-t border-stone-200 pt-6">
 				<p class="text-sm font-black uppercase tracking-[0.25em] text-stone-600">Számlaszám</p>

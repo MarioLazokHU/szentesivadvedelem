@@ -8,7 +8,7 @@
 
 <section class="w-full px-4 py-14 sm:px-8 lg:px-12 lg:py-20 2xl:px-16">
 	<div class="mb-12 w-full space-y-5">
-		<p class="font-black uppercase tracking-[0.3em] text-green-700">Kik vagyunk</p>
+		<p class="font-black uppercase tracking-[0.3em] text-[#68a61c]">Kik vagyunk</p>
 		<h1 class="section-title text-stone-900">Rólunk</h1>
 		<p class="lead-text text-stone-700">Mentés, gondozás, gyógyítás, oktatás és közösségi összefogás a természetben élő vagy bajba jutott állatokért.</p>
 	</div>
