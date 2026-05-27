@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "vite build && pm2 restart all",
     "preview": "vite preview",
     "generate": "generate edgeql-js --output-dir ./src/edgeql-js && generate interfaces --file ./src/edgeql-js/interfaces.ts"
   },
