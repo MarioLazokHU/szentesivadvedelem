@@ -37,11 +37,11 @@ export const aboutSections = [
     image: "/galery/együtt_sas.jpeg",
     text: `Az alapítvány együttműködik Békéscsaba Megyei Jogú Város Önkormányzatával, munkánkat Szarvas Péter polgármester úr is segíti és támogatja. Számunkra kiemelten fontos a természet és élővilág védelme, vagyis a környezetvédelem.
 
-Alapítványunk tevékenységének középpontjában a természetből bekerült árva vagy sérült állatok mentése és ellátása áll. Évente mintegy 700–800 egyed kerül hozzánk Csongrád-Csanád és Békés vármegye területéről.
+    Alapítványunk tevékenységének középpontjában a természetből bekerült árva vagy sérült állatok mentése és ellátása áll. Évente mintegy 700–800 egyed kerül hozzánk Csongrád-Csanád és Békés vármegye területéről.
 
-Együttműködünk a Békés Vármegyei és a Csongrád-Csanád Vármegyei Kormányhivatallal, valamint Jász-Nagykun-Szolnok vármegyében a Hortobágyi Nemzeti Parkkal kötött megállapodás keretében is dolgozunk.
+    Együttműködünk a Békés Vármegyei és a Csongrád-Csanád Vármegyei Kormányhivatallal, valamint Jász-Nagykun-Szolnok vármegyében a Hortobágyi Nemzeti Parkkal kötött megállapodás keretében is dolgozunk.
 
-Továbbá szoros szakmai kapcsolatban állunk a Szegedi Vadasparkkal és más nemzeti parkokkal is. Vadmentés terén vadászok és mezőőrök közreműködésével segítjük az árva vagy sérült egyedek megmentését.`,
+    Továbbá szoros szakmai kapcsolatban állunk a Szegedi Vadasparkkal,együttműködési megállapodás keretében dolgozzunk össze valamint a Körös Maros Nemzeti Parkkal és a Kiskunsági Nemzeti Parkkal szoros kapcsolatban állunk, közös erővel végezzük a természet árva, vagy sérült élőlényeinek mentését.`,
   },
   {
     title: "Az alapítvány növekedése",
