@@ -2,7 +2,6 @@ import e from '../../../../lib/server/e';
 import { client } from "../../../../lib/server/e";
 import { mkdir, writeFile, unlink, readdir } from "node:fs/promises";
 import path from "node:path";
-import sharp from 'sharp';
 
 const IMAGE_DIR = path.join(process.cwd(), "public", "images");
 
@@ -15,11 +14,16 @@ async function findImageFileName(id: string) {
   }
 }
 
+function isWebpBuffer(buffer: Buffer) {
+  return buffer.length >= 12 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP';
+}
+
 async function saveImage(file: File, description: string) {
   const inputBuffer = Buffer.from(await file.arrayBuffer());
-  const webpBuffer = await sharp(inputBuffer, { animated: true })
-    .webp({ quality: 82, effort: 4 })
-    .toBuffer();
+
+  if (!isWebpBuffer(inputBuffer)) {
+    throw new Error('Only WebP images are accepted.');
+  }
 
   const { id } = await e
     .insert(e.Image, {
@@ -31,7 +35,7 @@ async function saveImage(file: File, description: string) {
 
   const fileName = `${id}.webp`;
   const filePath = path.join(IMAGE_DIR, fileName);
-  await writeFile(filePath, webpBuffer);
+  await writeFile(filePath, inputBuffer);
 
   return id;
 }

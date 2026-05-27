@@ -76,6 +76,61 @@
     uploadForm?.reset();
   }
 
+  function toWebpFileName(fileName: string) {
+    return fileName.replace(/\.[^.]+$/, '') + '.webp';
+  }
+
+  async function imageToBitmap(file: File) {
+    if ('createImageBitmap' in window) {
+      return createImageBitmap(file);
+    }
+
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(img);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error(`Nem sikerült betölteni a képet: ${file.name}`));
+      };
+      img.src = url;
+    });
+
+    return image;
+  }
+
+  async function convertImageToWebp(file: File) {
+    const image = await imageToBitmap(file);
+    const width = image.width;
+    const height = image.height;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    if (!context) {
+      throw new Error('A böngésző nem támogatja a képkonvertálást.');
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    context.drawImage(image, 0, 0, width, height);
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((result) => {
+        if (result) resolve(result);
+        else reject(new Error(`Nem sikerült WebP formátumba konvertálni: ${file.name}`));
+      }, 'image/webp', 0.82);
+    });
+
+    if ('close' in image && typeof image.close === 'function') {
+      image.close();
+    }
+
+    return new File([blob], toWebpFileName(file.name), { type: 'image/webp' });
+  }
+
   async function uploadImage(event: SubmitEvent) {
     event.preventDefault();
     clearMessages();
@@ -90,7 +145,9 @@
 
       const formData = new FormData();
       formData.set("description", (currentFormData.get("description") as string) || "");
-      selectedFiles.forEach((file) => formData.append("files", file));
+      for (const file of selectedFiles) {
+        formData.append("files", await convertImageToWebp(file));
+      }
 
       const response = await fetch("/admin/api/images", {
         method: "POST",
