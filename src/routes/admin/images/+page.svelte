@@ -15,7 +15,8 @@
   let deletingId = $state<string | null>(null);
   let successMessage = $state("");
   let errorMessage = $state("");
-  let selectedFileName = $state("Nincs fájl kiválasztva");
+  let selectedFiles = $state<File[]>([]);
+  let isDragging = $state(false);
 
   $effect(() => {
     images = [...data.images].sort(
@@ -54,9 +55,25 @@
     img.src = imagePreviewFallback;
   }
 
+  function addSelectedFiles(fileList: FileList | File[]) {
+    const imageFiles = Array.from(fileList).filter((file) => file.type.startsWith("image/"));
+    selectedFiles = [...selectedFiles, ...imageFiles];
+  }
+
   function updateSelectedFile(event: Event) {
     const input = event.currentTarget as HTMLInputElement;
-    selectedFileName = input.files?.[0]?.name ?? "Nincs fájl kiválasztva";
+    addSelectedFiles(input.files ?? []);
+  }
+
+  function dropFiles(event: DragEvent) {
+    event.preventDefault();
+    isDragging = false;
+    addSelectedFiles(event.dataTransfer?.files ?? []);
+  }
+
+  function clearSelectedFiles() {
+    selectedFiles = [];
+    uploadForm?.reset();
   }
 
   async function uploadImage(event: SubmitEvent) {
@@ -65,12 +82,15 @@
     uploadPending = true;
 
     try {
-      const formData = new FormData(uploadForm);
-      const file = formData.get("file");
+      const currentFormData = new FormData(uploadForm);
 
-      if (!(file instanceof File) || file.size === 0) {
-        throw new Error("Válassz ki egy képet a feltöltéshez.");
+      if (selectedFiles.length === 0) {
+        throw new Error("Válassz ki legalább egy képet a feltöltéshez.");
       }
+
+      const formData = new FormData();
+      formData.set("description", (currentFormData.get("description") as string) || "");
+      selectedFiles.forEach((file) => formData.append("files", file));
 
       const response = await fetch("/admin/api/images", {
         method: "POST",
@@ -81,9 +101,9 @@
         throw new Error(await response.text());
       }
 
-      successMessage = "A kép sikeresen feltöltve.";
+      successMessage = `${selectedFiles.length} kép sikeresen feltöltve.`;
       uploadForm.reset();
-      selectedFileName = "Nincs fájl kiválasztva";
+      selectedFiles = [];
       setTimeout(() => location.reload(), 400);
     } catch (error) {
       errorMessage =
@@ -211,25 +231,49 @@
           >Kép</span
         >
         <span
-          class="grid min-w-0 max-w-full gap-2 rounded-lg border border-zinc-700 bg-zinc-950 p-3"
+          class={`grid min-w-0 max-w-full gap-2 rounded-lg border border-dashed p-4 transition ${isDragging ? "border-[#69a61e] bg-[#69a61e]/10" : "border-zinc-700 bg-zinc-950"}`}
+          ondragover={(event) => {
+            event.preventDefault();
+            isDragging = true;
+          }}
+          ondragleave={() => (isDragging = false)}
+          ondrop={dropFiles}
         >
           <span
             class="w-fit rounded-md bg-[#69a61e] px-4 py-2 text-sm font-bold text-white"
-            >Fájl kiválasztása</span
+            >Képek kiválasztása</span
           >
-          <span
-            class="block max-w-full truncate text-sm font-semibold text-zinc-400"
-            >{selectedFileName}</span
-          >
+          {#if selectedFiles.length === 0}
+            <span class="block max-w-full text-sm font-semibold text-zinc-400">Húzd ide a képeket vagy kattints a kiválasztáshoz.</span>
+          {:else}
+            <span class="block max-w-full text-sm font-semibold text-zinc-200">{selectedFiles.length} kép kiválasztva</span>
+            <div class="grid gap-1 text-xs text-zinc-500">
+              {#each selectedFiles.slice(0, 5) as file}
+                <span class="truncate">{file.name}</span>
+              {/each}
+              {#if selectedFiles.length > 5}
+                <span>+ {selectedFiles.length - 5} további kép</span>
+              {/if}
+            </div>
+            <button
+              type="button"
+              class="w-fit rounded-md bg-zinc-800 px-3 py-2 text-xs font-bold text-zinc-200 transition hover:bg-zinc-700"
+              onclick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                clearSelectedFiles();
+              }}
+            >Kijelölés törlése</button>
+          {/if}
           <span class="text-xs text-zinc-500"
-            >A kép automatikusan WebP formátumba lesz konvertálva.</span
+            >A képek automatikusan WebP formátumba lesznek konvertálva.</span
           >
           <input
-            name="file"
+            name="files"
             type="file"
             accept="image/*"
+            multiple
             class="sr-only"
-            required
             onchange={updateSelectedFile}
           />
         </span>

@@ -10,8 +10,6 @@ export const navItems = [
 
 export const socialLinks = [
 	{ href: 'https://www.facebook.com/profile.php?id=100066398812314', icon: '/fblogo.png', label: 'Facebook' },
-	{ href: 'https://www.facebook.com/profile.php?id=100066398812314', icon: '/iglogo.png', label: 'Instagram' },
-	{ href: 'https://www.facebook.com/profile.php?id=100066398812314', icon: '/ytlogo.png', label: 'YouTube' }
 ];
 
 export const foundation = {
