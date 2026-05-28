@@ -11,18 +11,30 @@
 	};
 
 	// YouTube ID kinyerése
-	function getYouTubeId(url: string) {
+	function getVideoSource(value: string) {
+		return value.match(/<iframe[^>]+src=["']([^"']+)["']/i)?.[1] ?? value;
+	}
+
+		function isIframeEmbed(value: string) {
+			return /<iframe[\s\S]*?>[\s\S]*?<\/iframe>|<iframe[\s\S]*?>/i.test(value);
+		}
+
+	function getYouTubeId(value: string) {
+		const url = getVideoSource(value);
 		const regExp =
 			/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
 		const match = url.match(regExp);
 		return match && match[2].length === 11 ? match[2] : null;
 	}
 
-	function isDirectVideoFile(url: string) {
+	function isDirectVideoFile(value: string) {
+		const url = getVideoSource(value);
 		return /\.(mp4|webm|ogg)(\?|$)/i.test(url);
 	}
 
-	function getEmbedUrl(url: string) {
+	function getEmbedUrl(value: string) {
+		const url = getVideoSource(value);
+
 		try {
 			const parsed = new URL(url.trim());
 			const host = parsed.hostname.toLowerCase();
@@ -100,6 +112,7 @@
 					<div class="grid grid-cols-1 gap-8">
 					{#each data.videos as video}
 						{@const videoId = getYouTubeId(video.url)}
+							{@const videoSource = getVideoSource(video.url)}
 
 						<div
 								class="group grid overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl lg:grid-cols-[minmax(320px,38vw)_1fr]"
@@ -108,14 +121,18 @@
 								id={"video-card-" + video.id}
 									class="relative aspect-video w-full overflow-hidden bg-zinc-900 lg:h-full lg:min-h-72"
 							>
-								{#if playingVideoId === video.id}
+									{#if isIframeEmbed(video.url)}
+										<div class="video-embed h-full w-full">
+											{@html video.url}
+										</div>
+									{:else if playingVideoId === video.id}
 									{#if isDirectVideoFile(video.url)}
 										<video
 											controls
 											autoplay
 											class="h-full w-full bg-black object-cover"
 										>
-											<source src={video.url} />
+										<source src={videoSource} />
 
 											Az Ön böngészője nem támogatja a videó
 											lejátszást.
@@ -141,7 +158,7 @@
 									{/if}
 								{:else}
 									<a
-										href={video.url}
+										href={videoSource}
 										target="_blank"
 										class="block h-full w-full"
 									>
@@ -171,69 +188,71 @@
 									</a>
 								{/if}
 
-								<!-- PLAY / PAUSE GOMB -->
-								<button
-									type="button"
-									on:click={() => playVideo(video.id)}
-									class={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300
+									{#if !isIframeEmbed(video.url)}
+										<!-- PLAY / PAUSE GOMB -->
+										<button
+											type="button"
+											on:click={() => playVideo(video.id)}
+											class={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300
 									${
 										playingVideoId === video.id
 											? 'bg-black/0 hover:bg-black/10'
 											: 'bg-black/10 hover:bg-black/30'
 									}`}
-									aria-label={playingVideoId === video.id
-										? 'Szünet'
-										: 'Lejátszás'}
-								>
-									<div
-										class={`flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300
+											aria-label={playingVideoId === video.id
+												? 'Szünet'
+												: 'Lejátszás'}
+										>
+											<div
+												class={`flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300
 										${
 											playingVideoId === video.id
 												? 'h-12 w-12 bg-white/10 text-white opacity-0 group-hover:opacity-100'
 												: 'h-14 w-14 bg-white/70 text-[#68a61c] shadow-xl hover:scale-110'
 										}`}
-									>
-										{#if playingVideoId === video.id}
-											<!-- Pause ikon -->
-											<svg
+											>
+												{#if playingVideoId === video.id}
+													<!-- Pause ikon -->
+													<svg
 												xmlns="http://www.w3.org/2000/svg"
 												viewBox="0 0 24 24"
 												fill="currentColor"
 												class="h-6 w-6"
-											>
-												<path
+												>
+													<path
 													fill-rule="evenodd"
 													d="M6.75 5.25A.75.75 0 017.5 6v12a.75.75 0 01-1.5 0V6a.75.75 0 01.75-.75zm9 0A.75.75 0 0116.5 6v12a.75.75 0 01-1.5 0V6a.75.75 0 01.75-.75z"
 													clip-rule="evenodd"
-												/>
-											</svg>
-										{:else}
-											<!-- Play ikon -->
-											<svg
+													/>
+												</svg>
+												{:else}
+													<!-- Play ikon -->
+													<svg
 												xmlns="http://www.w3.org/2000/svg"
 												viewBox="0 0 24 24"
 												fill="currentColor"
 												class="h-8 w-8"
-											>
-												<path
+												>
+													<path
 													fill-rule="evenodd"
 													d="M4.5 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
 													clip-rule="evenodd"
-												/>
-											</svg>
-										{/if}
-									</div>
-								</button>
+													/>
+												</svg>
+												{/if}
+											</div>
+										</button>
 
-								<!-- FULLSCREEN GOMB -->
-								{#if playingVideoId === video.id}
-									<button
+										<!-- FULLSCREEN GOMB -->
+										{#if playingVideoId === video.id}
+											<button
 										type="button"
 										on:click={() => openFullScreen(video.id)}
 										class="absolute right-4 top-4 z-20 rounded-full bg-white/10 px-3 py-2 text-xs font-bold text-white opacity-30 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:opacity-100"
-									>
-										Teljes képernyő
-									</button>
+											>
+												Teljes képernyő
+											</button>
+										{/if}
 								{/if}
 							</div>
 
@@ -290,4 +309,10 @@
 	:fullscreen button:hover {
 		opacity: 1;
 	}
+
+		:global(.video-embed iframe) {
+			height: 100%;
+			width: 100%;
+			border: 0;
+		}
 </style>

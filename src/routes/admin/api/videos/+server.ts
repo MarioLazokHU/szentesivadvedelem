@@ -15,7 +15,13 @@ export const GET = async () => {
   });
 };
 
-function isValidUrl(url: string) {
+function getIframeSrc(value: string) {
+  return value.match(/<iframe[^>]+src=["']([^"']+)["']/i)?.[1] ?? null;
+}
+
+function isValidVideoValue(value: string) {
+  const url = getIframeSrc(value) ?? value;
+
   try {
     new URL(url.trim());
     return true;
@@ -28,11 +34,11 @@ export const POST = async ({ request }) => {
   const { url, description } = await request.json();
 
   if (!url) {
-    return new Response('Missing video URL', { status: 400 });
+    return new Response('Missing video URL or embed code', { status: 400 });
   }
 
-  if (!isValidUrl(url)) {
-    return new Response('Invalid video URL', { status: 400 });
+  if (!isValidVideoValue(url)) {
+    return new Response('Invalid video URL or embed code', { status: 400 });
   }
 
   try {
@@ -59,11 +65,11 @@ export const PATCH = async ({ request }) => {
   const { id, url, description } = await request.json();
 
   if (!id || !url) {
-    return new Response('Missing id or url', { status: 400 });
+    return new Response('Missing id or video value', { status: 400 });
   }
 
-  if (!isValidUrl(url)) {
-    return new Response('Invalid video URL', { status: 400 });
+  if (!isValidVideoValue(url)) {
+    return new Response('Invalid video URL or embed code', { status: 400 });
   }
 
   try {
