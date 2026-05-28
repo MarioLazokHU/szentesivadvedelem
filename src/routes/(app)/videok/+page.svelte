@@ -19,12 +19,25 @@
 			return /<iframe[\s\S]*?>[\s\S]*?<\/iframe>|<iframe[\s\S]*?>/i.test(value);
 		}
 
+		function getEmbedNumber(value: string, attribute: 'width' | 'height') {
+			const match = value.match(new RegExp(`${attribute}=["']?([0-9]+)`, 'i'));
+			return match ? Number(match[1]) : null;
+		}
+
+		function isPortraitVideo(value: string) {
+			const width = getEmbedNumber(value, 'width');
+			const height = getEmbedNumber(value, 'height');
+
+			return Boolean(width && height && height > width);
+		}
+
 	function getYouTubeId(value: string) {
 		const url = getVideoSource(value);
 		const regExp =
 			/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
 		const match = url.match(regExp);
-		return match && match[2].length === 11 ? match[2] : null;
+		const id = match?.[2];
+		return id && id.length === 11 ? id : null;
 	}
 
 	function isDirectVideoFile(value: string) {
@@ -113,13 +126,14 @@
 					{#each data.videos as video}
 						{@const videoId = getYouTubeId(video.url)}
 							{@const videoSource = getVideoSource(video.url)}
+							{@const portraitVideo = isPortraitVideo(video.url)}
 
 						<div
-								class="group grid overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl lg:grid-cols-[minmax(320px,38vw)_1fr]"
+								class={`group grid overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl ${portraitVideo ? 'lg:grid-cols-[minmax(260px,420px)_1fr]' : 'lg:grid-cols-[minmax(320px,38vw)_1fr]'}`}
 						>
 							<div
 								id={"video-card-" + video.id}
-									class="relative aspect-video w-full overflow-hidden bg-zinc-900 lg:h-full lg:min-h-72"
+										class={`relative flex w-full items-center justify-center overflow-hidden bg-zinc-900 ${portraitVideo ? 'mx-auto aspect-9/16 max-h-[82vh] max-w-105' : 'min-h-[70vh] sm:min-h-140 lg:h-full lg:min-h-155'}`}
 							>
 									{#if isIframeEmbed(video.url)}
 										<div class="video-embed h-full w-full">
@@ -130,7 +144,7 @@
 										<video
 											controls
 											autoplay
-											class="h-full w-full bg-black object-cover"
+												class="h-full w-full bg-black object-contain"
 										>
 										<source src={videoSource} />
 
@@ -141,10 +155,10 @@
 										<iframe
 											src={getEmbedUrl(video.url)}
 											title={video.description}
-											class="h-full w-full"
+												class="h-full w-full"
 											allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
 											allowfullscreen
-										/>
+											></iframe>
 									{:else}
 										<div
 											class="flex h-full items-center justify-center bg-zinc-900 text-zinc-100"
@@ -310,8 +324,18 @@
 		opacity: 1;
 	}
 
+		:global(.video-embed) {
+			display: flex;
+			height: 100%;
+			width: 100%;
+			align-items: center;
+			justify-content: center;
+		}
+
 		:global(.video-embed iframe) {
 			height: 100%;
+			max-height: 100%;
+			max-width: 100%;
 			width: 100%;
 			border: 0;
 		}
